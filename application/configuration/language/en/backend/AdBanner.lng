@@ -1,0 +1,33 @@
+_add_banner=Add new banner
+_new_banner=New Banner
+
+# grid
+AdBanner.name=Name
+AdBanner.isEnabled=Enabled
+AdZone.name=Display zone
+AdBanner.type=Banner type
+AdBanner.url=Target URL
+AdBanner.html=HTML code
+AdBanner.width=Width
+AdBanner.height=Height
+_up_image=Upload image file
+_up_flash=Upload Flash file
+_listing_banners=Listing banners $from - $to of $count
+_no_banners=No banners found
+_are_you_sure_you_want_to_delete_banner=Really delete selected banners?
+_nothing_selected=Please select at least one banner first
+_type_image=Image
+_type_flash=Flash
+_type_html=Enter HTML code
+
+# editor
+_preview=Preview
+_banner_was_successfully_saved=Banner information was successfully saved
+_main_info=Banner Settings
+_banner_name_empty=Please enter the banner name
+_err_zone=Please select the banner display zone
+_err_banner_type=Please select the banner type
+_err_html_empty=Please enter the banner HTML code
+_err_image=Please upload a valid image
+_err_flash=Please upload a Flash file
+_err_url_empty=Please enter the banner target URL

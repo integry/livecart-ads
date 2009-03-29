@@ -1,0 +1,19 @@
+_add_campaign=Add new campaign
+_new_campaign=New Campaign
+
+# grid
+AdCampaign.name=Name
+AdCampaign.isEnabled=Enabled
+AdCampaign.validFrom=Active from
+AdCampaign.validTo=Active to
+_listing_campaigns=Listing campaigns $from - $to of $count
+_no_campaigns=No campaigns found
+_are_you_sure_you_want_to_delete_campaign=Really delete selected campaigns?
+_nothing_selected=Please select at least one campaign first
+
+# editor
+_cancel_editing_campaign=Cancel editing campaign
+_campaign_was_successfully_saved=Campaign information was successfully saved
+
+_main_info=Main Details
+_conditions=Ad Targeting

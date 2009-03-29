@@ -1,0 +1,1 @@
+{include file="module/ads/backend/adZone/node.tpl"}

@@ -1,0 +1,39 @@
+.recordContainer li
+{
+	list-style-type: none;
+}
+
+.conditionDelete, .recordDelete
+{
+	opacity: 0.15;
+	vertical-align: middle;
+	margin: 0 7px;
+}
+
+.conditionDelete:hover, .recordDelete:hover
+{
+	opacity: 1;
+	cursor: pointer;
+}
+
+.addConditionCategory
+{
+	background-image: url(../../../../image/silk/folder_add.png);
+}
+
+.addConditionProduct
+{
+	background-image: url(../../../../image/silk/package_add.png);
+}
+
+.addConditionManufacturer
+{
+	background-image: url(../../../../image/silk/cog_add.png);
+}
+
+.bannerPreviewContainer
+{
+	position: absolute;
+	right: 3em;
+	background: #fff;
+}
