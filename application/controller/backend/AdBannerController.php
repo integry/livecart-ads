@@ -52,6 +52,12 @@ class AdBannerController extends ActiveGridController
 									  AdBanner::TYPE_FLASH => $this->translate('_type_flash'),
 									  AdBanner::TYPE_HTML => $this->translate('_type_html')));
 
+		$response->set('target',  array('_self' => $this->translate('_self'),
+										'_blank' => $this->translate('_blank'),
+									   ));
+
+		$response->set('preview', array($banner->toArray()));
+
 		return $response;
 	}
 
@@ -114,7 +120,23 @@ class AdBannerController extends ActiveGridController
 
 	protected function getDefaultColumns()
 	{
-		return array('AdBanner.ID', 'AdBanner.name', 'AdBanner.isEnabled');
+		return array('AdBanner.ID', 'AdBanner.name', 'AdBanner.isEnabled', 'clicks', 'views', 'ctr', 'AdBanner.priority');
+	}
+
+	public function getAvailableColumns()
+	{
+		$availableColumns = parent::getAvailableColumns();
+
+		foreach (array('clicks', 'views', 'ctr') as $col)
+		{
+			$availableColumns[$col] = array
+				(
+					'name' => $this->translate($col),
+					'type' => 'number'
+				);
+		}
+
+		return $availableColumns;
 	}
 
 	protected function getSelectFilter()
@@ -131,7 +153,26 @@ class AdBannerController extends ActiveGridController
 			$f->mergeCondition(eq('AdBanner.campaignID', $id));
 		}
 
+		$cols = array();
+		foreach (array('clicks', 'views') as $col)
+		{
+			$cols[$col] = '(SELECT SUM(AdBannerStats.' . $col . ') FROM AdBannerStats WHERE AdBannerStats.bannerID = AdBanner.ID)';
+			$f->addField(new ARExpressionHandle($cols[$col]), null, $col);
+		}
+
+		$f->addField(new ARExpressionHandle('((' . $cols['clicks'] . '/' . $cols['views'] . ') * 100)'), null, 'ctr');
+
 		return $f;
+	}
+
+	protected function getColumnValue($record, $class, $field)
+	{
+		if (in_array($class, array('views', 'clicks', 'ctr')))
+		{
+			$record[$class] = $record[$class] ? $record[$class] : 0;
+		}
+
+		return parent::getColumnValue($record, $class, $field);
 	}
 
 	protected function setDefaultSortOrder(ARSelectFilter $filter)

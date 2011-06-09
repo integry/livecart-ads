@@ -4,3 +4,4 @@ _name=Zone name
 _block=Block ID
 _err_zone_name=Please enter zone name
 _err_block_name=Please enter the block ID
+_max_banner_count=Max number of ads to display at the same time

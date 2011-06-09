@@ -5,8 +5,8 @@
 # Project name:                                                          #
 # Author:                                                                #
 # Script type:           Database drop script                            #
-# Created on:            2009-03-25 16:56                                #
-# Model version:         Version 2009-03-25                              #
+# Created on:            2009-12-14 04:35                                #
+# Model version:         Version 2009-12-14                              #
 # ---------------------------------------------------------------------- #
 
 
@@ -19,8 +19,6 @@ ALTER TABLE `AdCampaign` DROP FOREIGN KEY `AdAdvertiser_AdCampaign`;
 ALTER TABLE `AdBanner` DROP FOREIGN KEY `AdCampaign_AdBanner`;
 
 ALTER TABLE `AdBanner` DROP FOREIGN KEY `AdZone_AdBanner`;
-
-ALTER TABLE `AdBannerAction` DROP FOREIGN KEY `AdBanner_AdBannerAction`;
 
 ALTER TABLE `AdAdvertiserUser` DROP FOREIGN KEY `AdAdvertiser_AdAdvertiserUser`;
 
@@ -40,7 +38,7 @@ ALTER TABLE `AdCampaignCondition` DROP FOREIGN KEY `UserGroup_AdCampaignConditio
 
 ALTER TABLE `AdCampaignCondition` DROP FOREIGN KEY `Language_AdCampaignCondition`;
 
-ALTER TABLE `AdBannerDailyStats` DROP FOREIGN KEY `AdBanner_AdBannerDailyStats`;
+ALTER TABLE `AdBannerStats` DROP FOREIGN KEY `AdBanner_AdBannerStats`;
 
 # ---------------------------------------------------------------------- #
 # Drop table "AdCampaign"                                                #
@@ -73,18 +71,6 @@ ALTER TABLE `AdBanner` DROP PRIMARY KEY;
 # Drop table #
 
 DROP TABLE `AdBanner`;
-
-# ---------------------------------------------------------------------- #
-# Drop table "AdBannerAction"                                            #
-# ---------------------------------------------------------------------- #
-
-# Drop constraints #
-
-ALTER TABLE `AdBannerAction` DROP PRIMARY KEY;
-
-# Drop table #
-
-DROP TABLE `AdBannerAction`;
 
 # ---------------------------------------------------------------------- #
 # Drop table "AdAdvertiser"                                              #
@@ -151,17 +137,17 @@ ALTER TABLE `AdCampaignCondition` DROP PRIMARY KEY;
 DROP TABLE `AdCampaignCondition`;
 
 # ---------------------------------------------------------------------- #
-# Drop table "AdBannerDailyStats"                                        #
+# Drop table "AdBannerStats"                                             #
 # ---------------------------------------------------------------------- #
 
 # Remove autoinc for PK drop #
 
-ALTER TABLE `AdBannerDailyStats` MODIFY `ID` INTEGER UNSIGNED NOT NULL;
+ALTER TABLE `AdBannerStats` MODIFY `ID` INTEGER UNSIGNED NOT NULL;
 
 # Drop constraints #
 
-ALTER TABLE `AdBannerDailyStats` DROP PRIMARY KEY;
+ALTER TABLE `AdBannerStats` DROP PRIMARY KEY;
 
 # Drop table #
 
-DROP TABLE `AdBannerDailyStats`;
+DROP TABLE `AdBannerStats`;

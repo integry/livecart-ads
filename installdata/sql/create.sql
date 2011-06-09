@@ -5,8 +5,8 @@
 # Project name:                                                          #
 # Author:                                                                #
 # Script type:           Database creation script                        #
-# Created on:            2009-03-25 16:56                                #
-# Model version:         Version 2009-03-25                              #
+# Created on:            2009-12-14 04:35                                #
+# Model version:         Version 2009-12-14                              #
 # ---------------------------------------------------------------------- #
 
 
@@ -40,22 +40,15 @@ CREATE TABLE `AdBanner` (
     `zoneID` INTEGER UNSIGNED,
     `isEnabled` BOOL NOT NULL,
     `type` TINYINT UNSIGNED NOT NULL COMMENT '0 - image 1 - HTML 2 - Flash',
+    `priority` INTEGER NOT NULL,
     `name` VARCHAR(100),
     `url` VARCHAR(255),
+    `filename` VARCHAR(255),
     `html` TEXT,
+    `width` INTEGER UNSIGNED,
+    `height` INTEGER UNSIGNED,
+    `target` VARCHAR(100),
     CONSTRAINT `PK_AdBanner` PRIMARY KEY (`ID`)
-);
-
-# ---------------------------------------------------------------------- #
-# Add table "AdBannerAction"                                             #
-# ---------------------------------------------------------------------- #
-
-CREATE TABLE `AdBannerAction` (
-    `ID` INTEGER NOT NULL,
-    `bannerID` INTEGER UNSIGNED,
-    `ip` INTEGER,
-    `type` TINYINT UNSIGNED NOT NULL COMMENT '0 - view 1 - click',
-    CONSTRAINT `PK_AdBannerAction` PRIMARY KEY (`ID`)
 );
 
 # ---------------------------------------------------------------------- #
@@ -86,6 +79,7 @@ CREATE TABLE `AdAdvertiserUser` (
 CREATE TABLE `AdZone` (
     `ID` INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
     `position` TINYINT UNSIGNED NOT NULL,
+    `maxCount` INTEGER,
     `block` VARCHAR(100),
     `name` TEXT,
     CONSTRAINT `PK_AdZone` PRIMARY KEY (`ID`)
@@ -108,59 +102,57 @@ CREATE TABLE `AdCampaignCondition` (
 );
 
 # ---------------------------------------------------------------------- #
-# Add table "AdBannerDailyStats"                                         #
+# Add table "AdBannerStats"                                              #
 # ---------------------------------------------------------------------- #
 
-CREATE TABLE `AdBannerDailyStats` (
+CREATE TABLE `AdBannerStats` (
     `ID` INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
     `bannerID` INTEGER UNSIGNED,
     `views` INTEGER UNSIGNED NOT NULL,
     `clicks` INTEGER UNSIGNED NOT NULL,
-    CONSTRAINT `PK_AdBannerDailyStats` PRIMARY KEY (`ID`)
+    `time` DATETIME,
+    CONSTRAINT `PK_AdBannerStats` PRIMARY KEY (`ID`)
 );
 
 # ---------------------------------------------------------------------- #
 # Foreign key constraints                                                #
 # ---------------------------------------------------------------------- #
 
-ALTER TABLE `AdCampaign` ADD CONSTRAINT `AdAdvertiser_AdCampaign`
+ALTER TABLE `AdCampaign` ADD CONSTRAINT `AdAdvertiser_AdCampaign` 
     FOREIGN KEY (`advertiserID`) REFERENCES `AdAdvertiser` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE `AdBanner` ADD CONSTRAINT `AdCampaign_AdBanner`
+ALTER TABLE `AdBanner` ADD CONSTRAINT `AdCampaign_AdBanner` 
     FOREIGN KEY (`campaignID`) REFERENCES `AdCampaign` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE `AdBanner` ADD CONSTRAINT `AdZone_AdBanner`
+ALTER TABLE `AdBanner` ADD CONSTRAINT `AdZone_AdBanner` 
     FOREIGN KEY (`zoneID`) REFERENCES `AdZone` (`ID`) ON DELETE SET NULL ON UPDATE CASCADE;
 
-ALTER TABLE `AdBannerAction` ADD CONSTRAINT `AdBanner_AdBannerAction`
-    FOREIGN KEY (`bannerID`) REFERENCES `AdBanner` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE;
-
-ALTER TABLE `AdAdvertiserUser` ADD CONSTRAINT `AdAdvertiser_AdAdvertiserUser`
+ALTER TABLE `AdAdvertiserUser` ADD CONSTRAINT `AdAdvertiser_AdAdvertiserUser` 
     FOREIGN KEY (`advertiserID`) REFERENCES `AdAdvertiser` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE `AdAdvertiserUser` ADD CONSTRAINT `User_AdAdvertiserUser`
+ALTER TABLE `AdAdvertiserUser` ADD CONSTRAINT `User_AdAdvertiserUser` 
     FOREIGN KEY (`userID`) REFERENCES `User` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE `AdCampaignCondition` ADD CONSTRAINT `AdCampaign_AdCampaignCondition`
+ALTER TABLE `AdCampaignCondition` ADD CONSTRAINT `AdCampaign_AdCampaignCondition` 
     FOREIGN KEY (`campaignID`) REFERENCES `AdCampaign` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE `AdCampaignCondition` ADD CONSTRAINT `User_AdCampaignCondition`
+ALTER TABLE `AdCampaignCondition` ADD CONSTRAINT `User_AdCampaignCondition` 
     FOREIGN KEY (`userID`) REFERENCES `User` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE `AdCampaignCondition` ADD CONSTRAINT `Category_AdCampaignCondition`
+ALTER TABLE `AdCampaignCondition` ADD CONSTRAINT `Category_AdCampaignCondition` 
     FOREIGN KEY (`categoryID`) REFERENCES `Category` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE `AdCampaignCondition` ADD CONSTRAINT `Manufacturer_AdCampaignCondition`
+ALTER TABLE `AdCampaignCondition` ADD CONSTRAINT `Manufacturer_AdCampaignCondition` 
     FOREIGN KEY (`manufacturerID`) REFERENCES `Manufacturer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE `AdCampaignCondition` ADD CONSTRAINT `Product_AdCampaignCondition`
+ALTER TABLE `AdCampaignCondition` ADD CONSTRAINT `Product_AdCampaignCondition` 
     FOREIGN KEY (`productID`) REFERENCES `Product` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE `AdCampaignCondition` ADD CONSTRAINT `UserGroup_AdCampaignCondition`
+ALTER TABLE `AdCampaignCondition` ADD CONSTRAINT `UserGroup_AdCampaignCondition` 
     FOREIGN KEY (`userGroupID`) REFERENCES `UserGroup` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE `AdCampaignCondition` ADD CONSTRAINT `Language_AdCampaignCondition`
+ALTER TABLE `AdCampaignCondition` ADD CONSTRAINT `Language_AdCampaignCondition` 
     FOREIGN KEY (`languageID`) REFERENCES `Language` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE `AdBannerDailyStats` ADD CONSTRAINT `AdBanner_AdBannerDailyStats`
+ALTER TABLE `AdBannerStats` ADD CONSTRAINT `AdBanner_AdBannerStats` 
     FOREIGN KEY (`bannerID`) REFERENCES `AdBanner` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE;

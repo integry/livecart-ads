@@ -33,10 +33,10 @@ class BannerController extends BaseController
 			$this->initializeAds();
 		}
 
-		if ($banner = AdManager::getBannerByZone(AdManager::getBlockZone($this->getBlockName())))
+		if ($banners = AdManager::getBannersByZone(AdManager::getBlockZone($this->getBlockName())))
 		{
 			AdManager::registerEvent('view', $banner['ID']);
-			return new BlockResponse('banner', $banner);
+			return new BlockResponse('banners', $banners);
 		}
 	}
 

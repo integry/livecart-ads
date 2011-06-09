@@ -1,0 +1,1 @@
+{include file="module/ads/backend/adBanner/grid.tpl"}

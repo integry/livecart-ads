@@ -586,6 +586,14 @@ Backend.AdCampaign.GridFormatter =
 					 value +
 				'</a>';
 		}
+		else if ('clicks' == field || 'views' == field)
+		{
+			value = value ? value : 0;
+		}
+		else if ('ctr' == field)
+		{
+			value = (Math.round((value ? value : 0) * 100) / 100) + '%';
+		}
 
 		return value;
 	}
@@ -701,6 +709,14 @@ Backend.AdBanner.GridFormatter =
 				'<a href="' + this.url + '#banner_' + id + '" id="banner_' + id + '" onclick="Backend.AdBanner.Editor.prototype.open(' + id + ', event); return false;">' +
 					 value +
 				'</a>';
+		}
+		else if ('clicks' == field || 'views' == field)
+		{
+			value = value ? value : 0;
+		}
+		else if ('ctr' == field)
+		{
+			value = (Math.round((value ? value : 0) * 100) / 100) + '%';
 		}
 
 		return value;

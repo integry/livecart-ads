@@ -6,7 +6,7 @@
 		<fieldset class="bannerPreviewContainer">
 			<legend>{t _preview}</legend>
 			<div class="bannerPreview">
-				{include file="module/ads/banner/block/banner.tpl"}
+				{include file="module/ads/banner/block/banner.tpl" banners=$preview}
 			</div>
 		</fieldset>
 
@@ -44,6 +44,20 @@
 					{filefield}
 				{/err}
 			</p>
+
+			<p>
+				{{err for="url"}}
+					{{label {t AdBanner.url} }}
+					{textfield class="text"}
+				{/err}
+			</p>
+
+			<p>
+				{{err for="target"}}
+					{{label {t AdBanner.target} }}
+					{selectfield options=$target}
+				{/err}
+			</p>
 		</div>
 
 		<div class="flashField">
@@ -79,9 +93,9 @@
 		</div>
 
 		<p>
-			{{err for="url"}}
-				{{label {t AdBanner.url} }}
-				{textfield class="text"}
+			{{err for="priority"}}
+				{{label {t AdBanner.priority} }}
+				{textfield class="text number"}
 			{/err}
 		</p>
 

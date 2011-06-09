@@ -45,7 +45,7 @@ class AdManager
 		}
 	}
 
-	public static function getBannerByZone($zone)
+	public static function getBannersByZone($zone)
 	{
 		if (is_null(self::$banners))
 		{
@@ -54,7 +54,8 @@ class AdManager
 
 		if (!empty(self::$banners[$zone['ID']]))
 		{
-			return array_shift(self::$banners[$zone['ID']]);
+			$maxCount = max(1, $zone['maxCount']);
+			return array_slice(self::$banners[$zone['ID']], 0, $maxCount);
 		}
 	}
 
@@ -62,11 +63,11 @@ class AdManager
 	{
 		$f = select(eq('AdCampaign.isEnabled', true), eq('AdBanner.isEnabled', true));
 
-		$date = eq(f('AdCampaign.validFrom'), 0);
+		$date = eq(f('AdCampaign.validFrom'), new ARExpressionHandle(0));
 		$date->addOr(lt(f('AdCampaign.validFrom'), f('NOW()')));
 		$f->mergeCondition($date);
 
-		$date = eq(f('AdCampaign.validTo'), 0);
+		$date = eq(f('AdCampaign.validTo'), new ARExpressionHandle(0));
 		$date->addOr(gt(f('AdCampaign.validTo'), f('NOW()')));
 		$f->mergeCondition($date);
 
@@ -74,7 +75,7 @@ class AdManager
 		if (!empty(self::$params['category']))
 		{
 			$cat = Category::getInstanceById(self::$params['category'], true);
-			$targeting[] = 'IF(Category.lft >= ' . $cat->lft->get() . ' AND Category.rgt <= ' . $cat->rgt->get() . ', ' . self::POINTS_CATEGORY . ', 0)';
+			$targeting[] = 'IF(Category.lft <= ' . $cat->lft->get() . ' AND Category.rgt >= ' . $cat->rgt->get() . ', ' . self::POINTS_CATEGORY . ', 0)';
 		}
 
 		foreach (array('product' => self::POINTS_PRODUCT, 'manufacturer' => self::POINTS_MANUFACTURER) as $field => $points)
@@ -85,10 +86,23 @@ class AdManager
 			}
 		}
 
+		$noConditions = eq(new ARExpressionHandle('(SELECT COUNT(*) FROM AdCampaignCondition WHERE AdCampaignCondition.campaignID=AdCampaign.ID)'), 0);
 		if ($targeting)
 		{
-			$f->setOrder(new ARExpressionHandle('(SELECT SUM(' . implode('+', $targeting) . ') FROM AdCampaignCondition ' . (!empty(self::$params['category']) ? ' LEFT JOIN Category ON Category.ID=AdCampaignCondition.categoryID ' : '') . ' WHERE AdCampaignCondition.campaignID=AdCampaign.ID)'), 'DESC');
+			$h = new ARExpressionHandle('(SELECT SUM(' . implode('+', $targeting) . ') FROM AdCampaignCondition ' . (!empty(self::$params['category']) ? ' LEFT JOIN Category ON Category.ID=AdCampaignCondition.categoryID ' : '') . ' WHERE AdCampaignCondition.campaignID=AdCampaign.ID)');
+			$conditions = gt($h, 0);
+			$conditions->addOr($noConditions);
+			$f->mergeCondition($conditions);
+			$f->setOrder($h, 'DESC');
 		}
+		else
+		{
+			$f->mergeCondition($noConditions);
+		}
+
+		$f->setOrder(f('AdBanner.priority'), 'DESC');
+		$f->setOrder(f('RAND()'));
+		//var_dump($f->createString()); exit;
 
 		self::$banners = array();
 		foreach (ActiveRecordModel::getRecordSetArray('AdBanner', $f, array('AdCampaign')) as $banner)
@@ -109,7 +123,10 @@ class AdManager
 
 	public function setCategoryId($id)
 	{
-		self::$params['category'] = $id;
+		if (1 != $id)
+		{
+			self::$params['category'] = $id;
+		}
 	}
 
 	public function setProductId($id)

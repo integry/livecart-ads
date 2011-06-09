@@ -144,9 +144,20 @@ class AdCampaignController extends ActiveGridController
 		return 'campaigns.csv';
 	}
 
-	protected function getDefaultColumns()
+	public function getAvailableColumns()
 	{
-		return array('AdCampaign.ID', 'AdCampaign.name', 'AdCampaign.isEnabled', 'AdCampaign.validFrom', 'AdCampaign.validTo');
+		$availableColumns = parent::getAvailableColumns();
+
+		foreach (array('clicks', 'views', 'ctr') as $col)
+		{
+			$availableColumns[$col] = array
+				(
+					'name' => $this->translate($col),
+					'type' => 'number'
+				);
+		}
+
+		return $availableColumns;
 	}
 
 	protected function getSelectFilter()
@@ -158,34 +169,41 @@ class AdCampaignController extends ActiveGridController
 		}
 		$f = new ARSelectFilter();
 
-		if ($id != -1)
+		if ($id && ($id != -1))
 		{
 			$f->mergeCondition(eq('AdCampaign.advertiserID', $id));
 		}
 
+		$cols = array();
+		foreach (array('clicks', 'views') as $col)
+		{
+			$cols[$col] = '(SELECT SUM(AdBannerStats.' . $col . ') FROM AdBannerStats LEFT JOIN AdBanner ON AdBanner.ID=AdBannerStats.bannerID WHERE AdBanner.campaignID = AdCampaign.ID)';
+			$f->addField(new ARExpressionHandle($cols[$col]), null, $col);
+		}
+
+		$f->addField(new ARExpressionHandle('((' . $cols['clicks'] . '/' . $cols['views'] . ') * 100)'), null, 'ctr');
+
 		return $f;
+	}
+
+	protected function getColumnValue($record, $class, $field)
+	{
+		if (in_array($class, array('views', 'clicks', 'ctr')))
+		{
+			$record[$class] = $record[$class] ? $record[$class] : 0;
+		}
+
+		return parent::getColumnValue($record, $class, $field);
+	}
+
+	protected function getDefaultColumns()
+	{
+		return array('AdCampaign.ID', 'AdCampaign.name', 'AdCampaign.isEnabled', 'AdCampaign.validFrom', 'AdCampaign.validTo', 'clicks', 'views', 'ctr');
 	}
 
 	protected function setDefaultSortOrder(ARSelectFilter $filter)
 	{
 		$filter->setOrder(new ARFieldHandle($this->getClassName(), 'ID'), 'ASC');
-	}
-
-	public function autoComplete()
-	{
-	  	$f = new ARSelectFilter();
-	  	$c = new LikeCond(new ARFieldHandle('Manufacturer', 'name'), $this->request->get('manufacturer') . '%');
-	  	$f->setCondition($c);
-
-	  	$results = ActiveRecordModel::getRecordSetArray('Manufacturer', $f);
-
-		$resp = array();
-	  	foreach ($results as $value)
-	  	{
-			$resp[$value['ID']] = $value['name'];
-		}
-
-		return new AutoCompleteResponse($resp);
 	}
 
 	private function buildValidator()

@@ -8,8 +8,10 @@ AdZone.name=Display zone
 AdBanner.type=Banner type
 AdBanner.url=Target URL
 AdBanner.html=HTML code
+AdBanner.priority=Display priority
 AdBanner.width=Width
 AdBanner.height=Height
+AdBanner.target=Target
 _up_image=Upload image file
 _up_flash=Upload Flash file
 _listing_banners=Listing banners $from - $to of $count
@@ -19,6 +21,8 @@ _nothing_selected=Please select at least one banner first
 _type_image=Image
 _type_flash=Flash
 _type_html=Enter HTML code
+_blank=New window
+_self=Same window
 
 # editor
 _preview=Preview

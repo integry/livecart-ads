@@ -15,6 +15,7 @@ class AdZone extends ActiveRecordModel
 		$schema->setName(__CLASS__);
 
 		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
+		$schema->registerField(new ARField("maxCount", ARInteger::instance(2)));
 		$schema->registerField(new ARField("position", ARInteger::instance(2)));
 		$schema->registerField(new ARField("name", ARVarchar::instance(100)));
 		$schema->registerField(new ARField("block", ARVarchar::instance(100)));

@@ -24,6 +24,7 @@ class AdBanner extends ActiveRecordModel
 		$schema->registerField(new ARForeignKeyField("campaignID", "AdCampaign", "ID", null, ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField("zoneID", "AdZone", "ID", null, ARInteger::instance()));
 		$schema->registerField(new ARField("type", ARInteger::instance()));
+		$schema->registerField(new ARField("priority", ARInteger::instance()));
 		$schema->registerField(new ARField("isEnabled", ARBool::instance()));
 		$schema->registerField(new ARField("name", ARVarchar::instance(100)));
 		$schema->registerField(new ARField("url", ARVarchar::instance(255)));
@@ -31,6 +32,7 @@ class AdBanner extends ActiveRecordModel
 		$schema->registerField(new ARField("html", ARText::instance()));
 		$schema->registerField(new ARField("width", ARInteger::instance()));
 		$schema->registerField(new ARField("height", ARInteger::instance()));
+		$schema->registerField(new ARField("target", ARVarchar::instance(100)));
 	}
 
 	/*####################  Static method implementations ####################*/
@@ -83,6 +85,11 @@ class AdBanner extends ActiveRecordModel
 			   $campaign->isEnabled->get() &&
 			   (!$from || $from <= time()) &&
 			   (!$to || $to >= time());
+	}
+
+	protected function miscRecordDataHandler($miscRecordDataArray)
+	{
+		var_dump($miscRecordDataArray);
 	}
 
 	private function getFilePath($file = null)
