@@ -5,9 +5,8 @@
 # Project name:                                                          #
 # Author:                                                                #
 # Script type:           Alter database script                           #
-# Created on:            2011-06-10 00:03                                #
-# Model version:         Version 2011-06-10                              #
-# From model version:    Version 2009-03-22                              #
+# Created on:            2011-06-10 05:39                                #
+# Model version:         Version 2009-09-01                              #
 # ---------------------------------------------------------------------- #
 
 
@@ -39,6 +38,8 @@ ALTER TABLE `AdCampaignCondition` DROP FOREIGN KEY `UserGroup_AdCampaignConditio
 
 ALTER TABLE `AdCampaignCondition` DROP FOREIGN KEY `Language_AdCampaignCondition`;
 
+ALTER TABLE `AdBannerStats` DROP FOREIGN KEY `AdBanner_AdBannerStats`;
+
 # ---------------------------------------------------------------------- #
 # Modify table "AdBanner"                                                #
 # ---------------------------------------------------------------------- #
@@ -47,11 +48,9 @@ ALTER TABLE `AdCampaignCondition` DROP FOREIGN KEY `Language_AdCampaignCondition
 
 ALTER TABLE `AdBanner` MODIFY `ID` INTEGER UNSIGNED NOT NULL;
 
-ALTER TABLE `AdBanner` ADD COLUMN `priority` INTEGER NOT NULL;
+ALTER TABLE `AdBanner` DROP COLUMN `priority`;
 
-ALTER TABLE `AdBanner` ADD COLUMN `target` VARCHAR(100);
-
-ALTER TABLE `AdBanner` MODIFY `priority` INTEGER NOT NULL AFTER `type`;
+ALTER TABLE `AdBanner` DROP COLUMN `target`;
 
 ALTER TABLE `AdBanner` MODIFY `ID` INTEGER UNSIGNED NOT NULL AUTO_INCREMENT;
 
@@ -63,9 +62,7 @@ ALTER TABLE `AdBanner` MODIFY `ID` INTEGER UNSIGNED NOT NULL AUTO_INCREMENT;
 
 ALTER TABLE `AdZone` MODIFY `ID` INTEGER UNSIGNED NOT NULL;
 
-ALTER TABLE `AdZone` ADD COLUMN `maxCount` INTEGER;
-
-ALTER TABLE `AdZone` MODIFY `maxCount` INTEGER AFTER `position`;
+ALTER TABLE `AdZone` DROP COLUMN `maxCount`;
 
 ALTER TABLE `AdZone` MODIFY `ID` INTEGER UNSIGNED NOT NULL AUTO_INCREMENT;
 
